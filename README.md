@@ -6,3 +6,17 @@ This repo contains files required to run an ETL process in order to create a dat
 ## Context
 In this project, as the Data Engineer of a fictional music startup called Sparkify, I had to create a database in Postgres using .json files containing song and songplays data in order to provide tables in which the analytics team can perform some queries to understand better users' behaviour. In this process, I created the tables' schemas and wrote the scripts in Python used for the ETL pipeline, using best practices in terms of documentation, data quality checks and code writing.
 
+## Database and ETL Pipeline Design
+
+## Files
+
+The repo contains the following folders and files:
+
+* `data` folder: contains all the data files used as the source of the ETL pipeline, which are split among two folders: `song_data` folder, which contains `.json` files containing metadata about song and the artist of the song, and `log_data` folder, which contains `.json` files that represent activity logs from events of the Sparkify app;
+* `create_tables.py`: script that drops and creates the database tables;
+* `etl.py`: 
+* `sql_queries.py`:
+* 
+
+## Running the Scripts
+
