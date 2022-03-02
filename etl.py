@@ -1,11 +1,16 @@
 import os
 import glob
 import psycopg2
+from datetime import datetime
 import pandas as pd
 from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    - Read .json files containing song info
+    - Insert the new records in the songs table and artists table
+    """
     # open song file
     df = pd.read_json(filepath, typ='series')  
 
@@ -21,6 +26,12 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    - Read .json files containing songplays info
+    - Filter only events of type NextSong
+    - Manipulate timestamp in order to extract different datetime parameters
+    - Insert the new records in the songs table and artists table
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -59,7 +70,7 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = (row.ts,
+        songplay_data = (datetime.fromtimestamp(row.ts / 1e3),
                          row.userId,
                          row.level,
                          songid,
@@ -72,6 +83,10 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    - Creates and connects to the sparkifydb
+    - Returns the connection and cursor to sparkifydb
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -91,8 +106,21 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
-    cur = conn.cursor()
+    """
+    - Creates and connects to the sparkifydb
+    - Returns the connection and cursor to sparkifydb
+    """
+    try: 
+        conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+    except psycopg2.Error as e: 
+        print("Error: Could not connect to the Postgres database")
+        print(e)
+        
+    try: 
+        cur = conn.cursor()
+    except psycopg2.Error as e: 
+        print("Error: Could not get cursos to the database")
+        print(e)
 
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
     process_data(cur, conn, filepath='data/log_data', func=process_log_file)
