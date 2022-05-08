@@ -24,7 +24,7 @@ songplay_table_create = ("""
         user_agent TEXT);
 """)
 
-user_table_create = song_table_create = ("""
+user_table_create = ("""
     CREATE TABLE IF NOT EXISTS users (
         user_id INT PRIMARY KEY, 
         first_name TEXT, 
